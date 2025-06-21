@@ -1,140 +1,215 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Habit Builder - Blueprint Season</title>
-<style>
-  body {
-    font-family: Arial, sans-serif;
-    background: #f0f3f7;
-    margin: 20px;
-    color: #333;
-  }
-  h1, h2, h3 {
-    text-align: center;
-    color: #2c3e50;
-  }
-  table {
-    width: 100%;
-    max-width: 700px;
-    margin: 20px auto;
-    border-collapse: collapse;
-    background: #fff;
-    box-shadow: 0 0 10px rgba(0,0,0,0.1);
-  }
-  th, td {
-    padding: 12px 15px;
-    border-bottom: 1px solid #ddd;
-    text-align: left;
-  }
-  th {
-    background-color: #2980b9;
-    color: white;
-  }
-  .tag {
-    font-weight: bold;
-    padding: 3px 8px;
-    border-radius: 12px;
-    color: white;
-    font-size: 0.85em;
-  }
-  .Health { background-color: #27ae60; }
-  .Trading { background-color: #c0392b; }
-  .Mindset { background-color: #8e44ad; }
-  .Growth { background-color: #f39c12; }
-  .Career { background-color: #16a085; }
-  .Finance { background-color: #d35400; }
-  .Spirit { background-color: #2980b9; }
-  .Planning { background-color: #34495e; }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Habit Builder - Blueprint Season</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f0f3f7;
+      margin: 20px;
+      color: #333;
+    }
+    h1, h2, h3 {
+      text-align: center;
+      color: #2c3e50;
+    }
+    table {
+      width: 100%;
+      max-width: 700px;
+      margin: 20px auto;
+      border-collapse: collapse;
+      background: #fff;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    th, td {
+      padding: 12px 15px;
+      border-bottom: 1px solid #ddd;
+      text-align: left;
+    }
+    th {
+      background-color: #2980b9;
+      color: white;
+    }
+    .tag {
+      font-weight: bold;
+      padding: 3px 8px;
+      border-radius: 12px;
+      color: white;
+      font-size: 0.85em;
+    }
+    .Health { background-color: #27ae60; }
+    .Trading { background-color: #c0392b; }
+    .Mindset { background-color: #8e44ad; }
+    .Growth { background-color: #f39c12; }
+    .Career { background-color: #16a085; }
+    .Finance { background-color: #d35400; }
+    .Spirit { background-color: #2980b9; }
+    .Planning { background-color: #34495e; }
 
-  .container {
-    max-width: 700px;
-    margin: 0 auto 40px auto;
-  }
+    .container {
+      max-width: 700px;
+      margin: 0 auto 40px auto;
+    }
 
-  .weekly-bonus {
-    background: #ecf0f1;
-    padding: 15px 25px;
-    border-radius: 8px;
-    margin: 30px auto;
-    max-width: 700px;
-  }
-  .weekly-bonus div {
-    margin-bottom: 10px;
-  }
+    .weekly-bonus, .notes-section, .xp-summary, .gaming-unlock {
+      background: #ecf0f1;
+      padding: 15px 25px;
+      border-radius: 8px;
+      margin: 30px auto;
+      max-width: 700px;
+    }
+    .weekly-bonus div,
+    .notes-section div {
+      margin-bottom: 10px;
+    }
 
-  .xp-summary {
-    max-width: 700px;
-    margin: 20px auto;
-    background: #dff0d8;
-    border-radius: 8px;
-    padding: 15px 25px;
-    color: #3c763d;
-    box-shadow: 0 0 10px rgba(60, 118, 61, 0.2);
-  }
-  #rewards-list {
-    list-style: none;
-    padding-left: 0;
-  }
-  #rewards-list li {
-    margin-bottom: 8px;
-  }
-</style>
+    .xp-summary {
+      background: #dff0d8;
+      color: #3c763d;
+      box-shadow: 0 0 10px rgba(60, 118, 61, 0.2);
+    }
+
+    #rewards-list {
+      list-style: none;
+      padding-left: 0;
+    }
+
+    #rewards-list li {
+      margin-bottom: 8px;
+    }
+
+    .streak-info {
+      font-weight: bold;
+      color: #e67e22;
+      text-align: center;
+    }
+
+    .gaming-unlock span {
+      font-weight: bold;
+    }
+
+    button {
+      margin: 0 auto;
+      display: block;
+      padding: 10px 20px;
+      font-size: 1em;
+      background: #2980b9;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #216494;
+    }
+
+    textarea {
+      width: 100%;
+      height: 80px;
+      padding: 10px;
+      font-size: 1em;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      resize: vertical;
+    }
+
+    .level-header {
+      text-align: center;
+      margin-top: 20px;
+    }
+
+    .progress-bar {
+      height: 18px;
+      width: 100%;
+      background-color: #ccc;
+      border-radius: 10px;
+      overflow: hidden;
+      margin: 10px auto;
+      max-width: 500px;
+    }
+
+    .progress-bar-inner {
+      height: 100%;
+      background-color: #27ae60;
+      width: 0;
+      transition: width 0.3s ease;
+    }
+  </style>
 </head>
 <body>
+  <h1>Blueprint Season - Habit Builder</h1>
+  <div class="container">
+    <table>
+      <thead>
+        <tr><th>Done?</th><th>Quest</th><th>XP</th><th>Tag</th></tr>
+      </thead>
+      <tbody id="daily-quests-tbody">
+        <!-- Filled by JS -->
+      </tbody>
+    </table>
+  </div>
+  <!-- Weekly Bonus Quests -->
+  <div class="weekly-bonus">
+    <h2>Weekly Bonus Quests</h2>
+    <div>
+      <input type="checkbox" class="weekly-bonus-quest" data-xp="50" id="bonus-5R" />
+      <label for="bonus-5R">Hit 5R trading profit goal (50 XP)</label>
+    </div>
+    <div>
+      <input type="checkbox" class="weekly-bonus-quest" data-xp="40" id="bonus-clean-meals" />
+      <label for="bonus-clean-meals">Full week of clean meals (40 XP)</label>
+    </div>
+    <div>
+      <input type="checkbox" class="weekly-bonus-quest" data-xp="35" id="bonus-morning-walk" />
+      <label for="bonus-morning-walk">Daily morning walk for 7 days (35 XP)</label>
+    </div>
+    <div>
+      <input type="checkbox" class="weekly-bonus-quest" data-xp="45" id="bonus-python-study" />
+      <label for="bonus-python-study">Study Python/backend 3+ hours total (45 XP)</label>
+    </div>
+    <div>
+      <input type="checkbox" class="weekly-bonus-quest" data-xp="30" id="bonus-trade-journal" />
+      <label for="bonus-trade-journal">Complete full trading journal daily (30 XP)</label>
+    </div>
+    <div>
+      <input type="checkbox" class="weekly-bonus-quest" data-xp="20" id="bonus-connect" />
+      <label for="bonus-connect">Connect with friends/family 5x this week (20 XP)</label>
+    </div>
+  </div>
 
-<h1>Blueprint Season - Habit Builder</h1>
+  <!-- Notes Section -->
+  <div class="notes-section">
+    <h2>📝 Daily Notes</h2>
+    <textarea id="daily-notes" placeholder="Reflect on today... or write down insights."></textarea>
+  </div>
 
-<div class="container">
-  <table>
-    <thead>
-      <tr><th>Done?</th><th>Quest</th><th>XP</th><th>Tag</th></tr>
-    </thead>
-    <tbody id="daily-quests-tbody">
-      <!-- Daily quests inserted by JS -->
-    </tbody>
-  </table>
-</div>
+  <!-- Streak + Daily XP + Gaming -->
+  <div class="gaming-unlock">
+    <p><span>Daily XP:</span> <span id="daily-xp">0</span></p>
+    <p><span>Streak:</span> <span id="streak-count">0</span> 🔥</p>
+    <p id="gaming-status">🎮 Gaming locked — earn 25+ XP to unlock.</p>
+  </div>
 
-<div class="weekly-bonus">
-  <h2>Weekly Bonus Quests</h2>
-  <div>
-    <input type="checkbox" class="weekly-bonus-quest" data-xp="50" id="bonus-5R" />
-    <label for="bonus-5R">Hit 5R trading profit goal (50 XP)</label>
-  </div>
-  <div>
-    <input type="checkbox" class="weekly-bonus-quest" data-xp="40" id="bonus-clean-meals" />
-    <label for="bonus-clean-meals">Full week of clean meals (40 XP)</label>
-  </div>
-  <div>
-    <input type="checkbox" class="weekly-bonus-quest" data-xp="35" id="bonus-morning-walk" />
-    <label for="bonus-morning-walk">Daily morning walk for 7 days (35 XP)</label>
-  </div>
-  <div>
-    <input type="checkbox" class="weekly-bonus-quest" data-xp="45" id="bonus-python-study" />
-    <label for="bonus-python-study">Study Python/backend 3+ hours total (45 XP)</label>
-  </div>
-  <div>
-    <input type="checkbox" class="weekly-bonus-quest" data-xp="30" id="bonus-trade-journal" />
-    <label for="bonus-trade-journal">Complete full trading journal daily (30 XP)</label>
-  </div>
-  <div>
-    <input type="checkbox" class="weekly-bonus-quest" data-xp="20" id="bonus-connect" />
-    <label for="bonus-connect">Connect with friends/family 5x this week (20 XP)</label>
-  </div>
-</div>
+  <!-- Reset Button -->
+  <button id="daily-reset">🔁 Daily Reset</button>
 
-<div class="xp-summary">
-  <h2>Total XP: <span id="total-xp">0</span></h2>
-  <h3>Unlocked Rewards:</h3>
-  <ul id="rewards-list">
-    <!-- Unlocked rewards shown here -->
-  </ul>
-</div>
+  <!-- Level + Total XP Summary -->
+  <div class="xp-summary">
+    <div class="level-header">
+      <h2>Level: <span id="current-level">1</span> — <span id="level-title">Initiate</span></h2>
+      <div class="progress-bar"><div class="progress-bar-inner" id="level-progress-bar"></div></div>
+      <p>Total XP: <span id="total-xp">0</span></p>
+    </div>
 
+    <h3>Unlocked Rewards:</h3>
+    <ul id="rewards-list">
+      <!-- Unlocked rewards appear here -->
+    </ul>
+  </div>
 <script>
-  // Define daily quests
   const dailyQuests = [
     { quest: "Morning walk (min 20 mins)", xp: 5, tag: "Health" },
     { quest: "Pre-trading self-check (focus, sleep, stress)", xp: 7, tag: "Trading" },
@@ -151,34 +226,53 @@
     { quest: "Plan your next day (tasks, focus)", xp: 4, tag: "Planning" },
   ];
 
-  // Big rewards thresholds and names
+  const levelThresholds = [
+    { level: 1, xp: 0, title: "Initiate" },
+    { level: 2, xp: 50, title: "Disciplined Seedling" },
+    { level: 3, xp: 100, title: "Routine Builder" },
+    { level: 4, xp: 150, title: "Momentum Starter" },
+    { level: 5, xp: 200, title: "Levelled Up Loner" },
+    { level: 6, xp: 300, title: "Daily Driver" },
+    { level: 7, xp: 400, title: "Explorer" },
+    { level: 8, xp: 600, title: "System Shaper" },
+    { level: 9, xp: 800, title: "Discipline Architect" },
+    { level: 10, xp: 1000, title: "Master of the Blueprint" },
+  ];
+
   const rewards = [
-    { name: "🍫 Treat Yourself", xpRequired: 30 },
-    { name: "🚶 Extra Walk", xpRequired: 40 },
-    { name: "🎮 Game Time", xpRequired: 50 },
-    { name: "🛁 Self-Care Bath", xpRequired: 60 },
-    { name: "🍽️ Eat Out", xpRequired: 80 },
-    { name: "🛍️ Small Purchase", xpRequired: 70 },
-    { name: "👟 New Trainers", xpRequired: 200 },
-    { name: "✈️ Weekend Solo Trip", xpRequired: 400 },
+    { name: "🍫 Small snack treat", xpRequired: 50 },
+    { name: "🍽️ Solo brunch or coffee", xpRequired: 150 },
+    { name: "👟 New trainers", xpRequired: 200 },
+    { name: "📚 Buy a book or Blueprint upgrade", xpRequired: 300 },
+    { name: "✈️ Weekend solo trip", xpRequired: 400 },
+    { name: "🧖 Spa session or full reset day", xpRequired: 600 },
+    { name: "🎁 Upgrade something in your setup", xpRequired: 800 },
+    { name: "🌍 Book a 3–5 day travel experience", xpRequired: 1000 },
   ];
 
   const dailyQuestsTbody = document.getElementById('daily-quests-tbody');
   const totalXpElem = document.getElementById('total-xp');
   const rewardsListElem = document.getElementById('rewards-list');
+  const levelElem = document.getElementById('current-level');
+  const levelTitleElem = document.getElementById('level-title');
+  const progressBar = document.getElementById('level-progress-bar');
+  const dailyXpElem = document.getElementById('daily-xp');
+  const streakElem = document.getElementById('streak-count');
+  const gamingStatus = document.getElementById('gaming-status');
+  const notesInput = document.getElementById('daily-notes');
 
-  // Load saved state from localStorage or init new
   let savedData = JSON.parse(localStorage.getItem('habitBuilderData')) || {
     daily: Array(dailyQuests.length).fill(false),
     weekly: {},
+    notes: "",
+    streak: 0,
+    lastResetDate: null
   };
 
-  // Render daily quests
   function renderDailyQuests() {
     dailyQuestsTbody.innerHTML = '';
     dailyQuests.forEach((q, i) => {
       const tr = document.createElement('tr');
-
       const tdCheckbox = document.createElement('td');
       const checkbox = document.createElement('input');
       checkbox.type = 'checkbox';
@@ -203,85 +297,116 @@
       tr.appendChild(tdQuest);
       tr.appendChild(tdXp);
       tr.appendChild(tdTag);
-
       dailyQuestsTbody.appendChild(tr);
     });
   }
 
-  // Load weekly bonuses checkboxes state
   function loadWeeklyBonuses() {
-    const weeklyCheckboxes = document.querySelectorAll('.weekly-bonus-quest');
-    weeklyCheckboxes.forEach(cb => {
+    document.querySelectorAll('.weekly-bonus-quest').forEach(cb => {
       cb.checked = savedData.weekly[cb.id] || false;
     });
   }
 
-  // Calculate total XP from daily and weekly
-  function calculateTotalXp() {
-    let total = 0;
-    // daily XP
+  function calculateXp() {
+    let total = 0, daily = 0;
     savedData.daily.forEach((done, i) => {
-      if (done) total += dailyQuests[i].xp;
+      if (done) {
+        total += dailyQuests[i].xp;
+        daily += dailyQuests[i].xp;
+      }
     });
-    // weekly XP
-    const weeklyCheckboxes = document.querySelectorAll('.weekly-bonus-quest');
-    weeklyCheckboxes.forEach(cb => {
+    document.querySelectorAll('.weekly-bonus-quest').forEach(cb => {
       if (cb.checked) total += parseInt(cb.dataset.xp, 10);
     });
-    return total;
+    return { total, daily };
   }
 
-  // Update XP display and rewards
-  function updateXpAndRewards() {
-    const totalXp = calculateTotalXp();
-    totalXpElem.textContent = totalXp;
+  function getLevel(xp) {
+    let current = levelThresholds[0];
+    for (let lvl of levelThresholds) {
+      if (xp >= lvl.xp) current = lvl;
+    }
+    return current;
+  }
 
-    // Show unlocked rewards
+  function getNextLevel(xp) {
+    return levelThresholds.find(lvl => xp < lvl.xp) || levelThresholds[levelThresholds.length - 1];
+  }
+
+  function updateDisplay() {
+    const { total, daily } = calculateXp();
+    const level = getLevel(total);
+    const next = getNextLevel(total);
+    const progress = next ? Math.min(100, (total - level.xp) / (next.xp - level.xp) * 100) : 100;
+
+    totalXpElem.textContent = total;
+    levelElem.textContent = level.level;
+    levelTitleElem.textContent = level.title;
+    progressBar.style.width = progress + '%';
+    dailyXpElem.textContent = daily;
+    streakElem.textContent = savedData.streak;
+
+    // Gaming unlock
+    gamingStatus.textContent = daily >= 25
+      ? '🎮 Gaming unlocked today — great work!'
+      : '🎮 Gaming locked — earn 25+ XP to unlock.';
+
+    // Rewards
     rewardsListElem.innerHTML = '';
-    rewards
-      .filter(r => totalXp >= r.xpRequired)
-      .forEach(r => {
-        const li = document.createElement('li');
-        li.textContent = `${r.name} — unlocked at ${r.xpRequired} XP`;
-        rewardsListElem.appendChild(li);
-      });
-  }
-
-  // Save current progress to localStorage
-  function saveProgress() {
-    // daily
-    const dailyCheckboxes = document.querySelectorAll('.daily-quest');
-    dailyCheckboxes.forEach(cb => {
-      const index = parseInt(cb.dataset.index, 10);
-      savedData.daily[index] = cb.checked;
+    rewards.filter(r => total >= r.xpRequired).forEach(r => {
+      const li = document.createElement('li');
+      li.textContent = `${r.name} — unlocked at ${r.xpRequired} XP`;
+      rewardsListElem.appendChild(li);
     });
 
-    // weekly
-    const weeklyCheckboxes = document.querySelectorAll('.weekly-bonus-quest');
-    weeklyCheckboxes.forEach(cb => {
+    // Notes
+    notesInput.value = savedData.notes || "";
+  }
+
+  function saveProgress() {
+    document.querySelectorAll('.daily-quest').forEach(cb => {
+      const i = parseInt(cb.dataset.index, 10);
+      savedData.daily[i] = cb.checked;
+    });
+    document.querySelectorAll('.weekly-bonus-quest').forEach(cb => {
       savedData.weekly[cb.id] = cb.checked;
     });
-
+    savedData.notes = notesInput.value;
     localStorage.setItem('habitBuilderData', JSON.stringify(savedData));
   }
 
-  // Event listeners for checkboxes
-  function addEventListeners() {
-    document.addEventListener('change', e => {
-      if (e.target.matches('.daily-quest') || e.target.matches('.weekly-bonus-quest')) {
-        saveProgress();
-        updateXpAndRewards();
-      }
-    });
+  function resetDay() {
+    const { daily } = calculateXp();
+    const today = new Date().toISOString().slice(0, 10);
+    if (savedData.lastResetDate !== today) {
+      if (daily >= 25) savedData.streak += 1;
+      else savedData.streak = 0;
+      savedData.lastResetDate = today;
+    }
+    savedData.daily = Array(dailyQuests.length).fill(false);
+    savedData.notes = "";
+    localStorage.setItem('habitBuilderData', JSON.stringify(savedData));
+    renderDailyQuests();
+    updateDisplay();
   }
 
-  // Initial render and setup
+  document.addEventListener('change', e => {
+    if (e.target.matches('.daily-quest, .weekly-bonus-quest, #daily-notes')) {
+      saveProgress();
+      updateDisplay();
+    }
+  });
+
+  document.getElementById('daily-reset').addEventListener('click', () => {
+    if (confirm("Reset today's progress? This cannot be undone.")) {
+      resetDay();
+    }
+  });
+
+  // Initial render
   renderDailyQuests();
   loadWeeklyBonuses();
-  updateXpAndRewards();
-  addEventListeners();
-
+  updateDisplay();
 </script>
-
 </body>
 </html>
