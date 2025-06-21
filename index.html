@@ -143,9 +143,10 @@
   /* Dashboard grid */
   .dashboard-grid {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 12px 20px;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px 30px;
     font-size: 1.1em;
+    align-items: center;
   }
 
   /* Buttons */
@@ -227,7 +228,8 @@
     <div class="dashboard-grid">
       <div><strong>Streak:</strong> <span id="streak-count">0</span></div>
       <div><strong>Currency:</strong> <span id="currency-count">0 XP</span></div>
-      <div id="game-time-container" style="margin-top: 10px; grid-column: span 2;">
+      
+      <div>
         <strong>🎮 Game Time Progress</strong>
         <div class="progress-bar" style="margin-top: 6px;">
           <div id="game-time-bar-fill" class="progress-fill" style="width: 0%;"></div>
@@ -236,8 +238,19 @@
           🎉 Game Time unlocked for today! Enjoy your unwind session!
         </p>
       </div>
-      <h3>Unlocked Rewards:</h3>
-      <ul id="rewards-list"></ul>
+      
+      <div>
+        <strong>⭐ Level Progress</strong>
+        <div class="progress-bar" style="margin-top: 6px;">
+          <div id="level-bar-fill" class="progress-fill" style="width: 0%; background: linear-gradient(90deg, #f1c40f, #e67e22); box-shadow: 0 0 12px #f1c40f;"></div>
+        </div>
+        <p id="level-text" style="margin: 4px 0 0; color: #f39c12; font-weight: bold;">
+          Level <span id="current-level">1</span> — <span id="xp-to-next-level">0 XP</span> to next level
+        </p>
+      </div>
+
+      <h3 style="grid-column: span 2;">Unlocked Rewards:</h3>
+      <ul id="rewards-list" style="grid-column: span 2;"></ul>
     </div>
   </div>
 </div>
@@ -280,7 +293,15 @@
 </div>
 
 <script>
-  // Define daily quests
+  // Constants
+  const GAME_TIME_TARGET = 25;
+
+  // Levels setup example: each level needs 100 XP * level number
+  function xpForLevel(level) {
+    return 100 * level;
+  }
+
+  // Daily quests data
   const dailyQuests = [
     { quest: "Morning walk (min 20 mins)", xp: 5, tag: "Health" },
     { quest: "Pre-trading self-check (focus, sleep, stress)", xp: 7, tag: "Trading" },
@@ -297,7 +318,7 @@
     { quest: "Plan your next day (tasks, focus)", xp: 4, tag: "Planning" },
   ];
 
-  // Rewards for XP milestones
+  // Rewards array (for display only)
   const rewards = [
     { name: "🍫 Treat Yourself", xpRequired: 30 },
     { name: "🚶 Extra Walk", xpRequired: 40 },
@@ -309,77 +330,73 @@
     { name: "✈️ Weekend Solo Trip", xpRequired: 400 },
   ];
 
-  // Shop items (sync with rewards, but no Game Time here)
-  // Using the shop div as above
-
-  const dailyQuestsTbody = document.getElementById('daily-quests-tbody');
-  const totalXpElem = document.getElementById('currency-count');
-  const rewardsListElem = document.getElementById('rewards-list');
-  const streakCountElem = document.getElementById('streak-count');
-
-  // For Game Time progress
-  const GAME_TIME_TARGET = 25; // XP needed to unlock Game Time daily
-
-  // Load saved data or init
+  // Load saved data or initialize
   let savedData = JSON.parse(localStorage.getItem('habitBuilderData')) || {
     daily: Array(dailyQuests.length).fill(false),
     weekly: {},
-    streak: 0,
-    currency: 0,
     shopPurchased: {},
-    lastReset: null
+    lastReset: null,
+    streak: 0,
+    totalXpAccum: 0,
   };
 
-  // Reset daily progress if date changed
+  // Daily reset check (midnight)
   function checkDailyReset() {
-    const todayStr = new Date().toISOString().slice(0,10);
+    const now = new Date();
+    const todayStr = now.toISOString().split('T')[0];
     if (savedData.lastReset !== todayStr) {
+      // Reset daily quest progress & weekly reset handled elsewhere
       savedData.daily = Array(dailyQuests.length).fill(false);
-      savedData.weekly = {}; // Optional: keep weekly or reset
-      savedData.streak = savedData.streak && savedData.daily.every(done => done) ? savedData.streak + 1 : 0;
-      savedData.currency = savedData.currency || 0; // don't reset currency
-      savedData.shopPurchased = savedData.shopPurchased || {};
+      savedData.weekly = {};
       savedData.lastReset = todayStr;
-      saveAndUpdate();
+      savedData.streak = savedData.streak + 1; // increase streak by 1 for simplicity
+      saveData();
     }
+  }
+
+  function saveData() {
+    localStorage.setItem('habitBuilderData', JSON.stringify(savedData));
   }
 
   // Render daily quests table
   function renderDailyQuests() {
-    dailyQuestsTbody.innerHTML = '';
+    const tbody = document.getElementById('daily-quests-tbody');
+    tbody.innerHTML = '';
     dailyQuests.forEach((q, i) => {
       const tr = document.createElement('tr');
-
+      // Checkbox
       const tdCheckbox = document.createElement('td');
       const checkbox = document.createElement('input');
       checkbox.type = 'checkbox';
-      checkbox.classList.add('daily-quest');
+      checkbox.className = 'daily-quest';
       checkbox.dataset.index = i;
       checkbox.checked = savedData.daily[i];
       tdCheckbox.appendChild(checkbox);
+      tr.appendChild(tdCheckbox);
 
+      // Quest description
       const tdQuest = document.createElement('td');
       tdQuest.textContent = q.quest;
+      tr.appendChild(tdQuest);
 
+      // XP
       const tdXp = document.createElement('td');
       tdXp.textContent = q.xp + ' XP';
+      tr.appendChild(tdXp);
 
+      // Tag
       const tdTag = document.createElement('td');
       const spanTag = document.createElement('span');
-      spanTag.classList.add('tag', q.tag);
+      spanTag.className = 'tag ' + q.tag;
       spanTag.textContent = q.tag;
       tdTag.appendChild(spanTag);
-
-      tr.appendChild(tdCheckbox);
-      tr.appendChild(tdQuest);
-      tr.appendChild(tdXp);
       tr.appendChild(tdTag);
 
-      dailyQuestsTbody.appendChild(tr);
+      tbody.appendChild(tr);
     });
   }
 
-  // Load weekly bonuses state
+  // Load weekly bonuses
   function loadWeeklyBonuses() {
     const weeklyCheckboxes = document.querySelectorAll('.weekly-bonus-quest');
     weeklyCheckboxes.forEach(cb => {
@@ -387,7 +404,7 @@
     });
   }
 
-  // Calculate total XP earned today (daily + weekly)
+  // Calculate total XP (daily + weekly)
   function calculateTotalXp() {
     let total = 0;
     savedData.daily.forEach((done, i) => {
@@ -400,13 +417,20 @@
     return total;
   }
 
-  // Update Dashboard values
+  // Update dashboard display (streak, currency, rewards)
   function updateDashboard() {
-    const totalXp = calculateTotalXp();
-    totalXpElem.textContent = totalXp + " XP";
-    streakCountElem.textContent = savedData.streak || 0;
+    const streakElem = document.getElementById('streak-count');
+    const currencyElem = document.getElementById('currency-count');
+    const rewardsListElem = document.getElementById('rewards-list');
 
-    // Update unlocked rewards list
+    // Streak display
+    streakElem.textContent = savedData.streak;
+
+    // Currency = total XP
+    const totalXp = calculateTotalXp();
+    currencyElem.textContent = totalXp + ' XP';
+
+    // Show unlocked rewards based on total XP
     rewardsListElem.innerHTML = '';
     rewards
       .filter(r => totalXp >= r.xpRequired)
@@ -415,6 +439,56 @@
         li.textContent = `${r.name} — unlocked at ${r.xpRequired} XP`;
         rewardsListElem.appendChild(li);
       });
+
+    // Update level info
+    updateLevelProgress(totalXp);
+  }
+
+  // Update game time progress bar and text
+  function updateGameTimeProgress() {
+    const gameTimeBar = document.getElementById('game-time-bar-fill');
+    const gameTimeText = document.getElementById('game-time-text');
+
+    let gameTimeXp = 0;
+    savedData.daily.forEach((done, i) => {
+      if (done && (dailyQuests[i].tag === 'Mindset' || dailyQuests[i].tag === 'Spirit')) {
+        gameTimeXp += dailyQuests[i].xp;
+      }
+    });
+
+    const progressPercent = Math.min((gameTimeXp / GAME_TIME_TARGET) * 100, 100);
+    gameTimeBar.style.width = progressPercent + '%';
+
+    if (gameTimeXp >= GAME_TIME_TARGET) {
+      gameTimeText.style.display = 'block';
+    } else {
+      gameTimeText.style.display = 'none';
+    }
+  }
+
+  // Level progress update
+  function updateLevelProgress(totalXp) {
+    const levelBar = document.getElementById('level-bar-fill');
+    const levelText = document.getElementById('level-text');
+    const currentLevelElem = document.getElementById('current-level');
+    const xpToNextLevelElem = document.getElementById('xp-to-next-level');
+
+    // Calculate current level based on total XP accumulated (basic XP per level)
+    let level = 1;
+    let xpForNext = xpForLevel(level);
+    while (totalXp >= xpForNext) {
+      level++;
+      xpForNext = xpForLevel(level);
+    }
+
+    const prevLevelXp = xpForLevel(level - 1);
+    const xpIntoLevel = totalXp - prevLevelXp;
+    const xpNeeded = xpForNext - prevLevelXp;
+    const progressPercent = Math.min((xpIntoLevel / xpNeeded) * 100, 100);
+
+    levelBar.style.width = progressPercent + '%';
+    currentLevelElem.textContent = level;
+    xpToNextLevelElem.textContent = (xpNeeded - xpIntoLevel) + ' XP';
   }
 
   // Save progress to localStorage
@@ -431,6 +505,8 @@
     weeklyCheckboxes.forEach(cb => {
       savedData.weekly[cb.id] = cb.checked;
     });
+
+    saveData();
   }
 
   // Save and update all displays
@@ -438,31 +514,6 @@
     saveProgress();
     updateDashboard();
     updateGameTimeProgress();
-    localStorage.setItem('habitBuilderData', JSON.stringify(savedData));
-  }
-
-  // Update the Game Time progress bar and message
-  function updateGameTimeProgress() {
-    const gameTimeBar = document.getElementById('game-time-bar-fill');
-    const gameTimeText = document.getElementById('game-time-text');
-
-    // Example: count XP only from Mindset and Spirit tags (customize as you want)
-    let gameTimeXp = 0;
-    savedData.daily.forEach((done, i) => {
-      if (done && (dailyQuests[i].tag === 'Mindset' || dailyQuests[i].tag === 'Spirit')) {
-        gameTimeXp += dailyQuests[i].xp;
-      }
-    });
-
-    // Cap progress at 100%
-    const progressPercent = Math.min((gameTimeXp / GAME_TIME_TARGET) * 100, 100);
-    gameTimeBar.style.width = progressPercent + '%';
-
-    if (gameTimeXp >= GAME_TIME_TARGET) {
-      gameTimeText.style.display = 'block';
-    } else {
-      gameTimeText.style.display = 'none';
-    }
   }
 
   // Tab switching logic
@@ -503,25 +554,14 @@
           return;
         }
 
-        // Deduct XP from currency (simulate by saving a spent currency)
-        // Since currency is just total XP today, for demo we do not deduct permanently
-        // You can implement a currency system if you want
-
         savedData.shopPurchased[name] = true;
         alert(`Reward redeemed: ${name}! Enjoy!`);
 
-        localStorage.setItem('habitBuilderData', JSON.stringify(savedData));
+        saveData();
         updateDashboard();
       });
     });
   }
-
-  // On checkbox change - save and update
-  document.addEventListener('change', e => {
-    if (e.target.matches('.daily-quest') || e.target.matches('.weekly-bonus-quest')) {
-      saveAndUpdate();
-    }
-  });
 
   // Initial setup
   checkDailyReset();
@@ -531,6 +571,13 @@
   updateGameTimeProgress();
   setupTabs();
   setupShop();
+
+  // Event listener for checkboxes
+  document.addEventListener('change', e => {
+    if (e.target.matches('.daily-quest') || e.target.matches('.weekly-bonus-quest')) {
+      saveAndUpdate();
+    }
+  });
 </script>
 
 </body>
