@@ -9,158 +9,173 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Habit Builder - Blueprint Season</title>
+ </style>
+</head>
   <style>
-    @media (max-width: 480px) {
+  :root {
+    --bg-color: #121212;
+    --card-bg: #1f1f1f;
+    --accent-blue: #00bfff;
+    --accent-purple: #9b59b6;
+    --accent-gold: #f1c40f;
+    --text-color: #f0f0f0;
+    --success-glow: 0 0 10px var(--accent-gold);
+  }
+
   body {
-    margin: 10px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    margin: 0;
+    padding: 20px;
+  }
+
+  h1, h2, h3 {
+    text-align: center;
+    color: var(--accent-gold);
+    margin-bottom: 10px;
+  }
+
+  .card {
+    background-color: var(--card-bg);
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.6);
+    margin-bottom: 25px;
+    transition: transform 0.2s ease, box-shadow 0.3s ease;
+  }
+
+  .card:hover {
+    transform: scale(1.01);
+    box-shadow: 0 0 20px var(--accent-purple);
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    color: var(--text-color);
+  }
+
+  th, td {
+    padding: 12px 15px;
+    border-bottom: 1px solid #333;
+    text-align: left;
     font-size: 14px;
   }
-  table th, table td {
-    padding: 8px;
-    font-size: 13px;
+
+  th {
+    background-color: var(--accent-purple);
+    color: white;
+    font-weight: bold;
+    text-transform: uppercase;
   }
-  .container, .weekly-bonus, .notes-section, .xp-summary {
-    padding: 10px 15px;
+
+  .tag {
+    display: inline-block;
+    font-weight: bold;
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 0.75em;
+    color: #fff;
   }
+
+  .Health    { background-color: #2ecc71; }
+  .Trading   { background-color: #e74c3c; }
+  .Mindset   { background-color: #8e44ad; }
+  .Growth    { background-color: #f39c12; }
+  .Career    { background-color: #16a085; }
+  .Finance   { background-color: #d35400; }
+  .Spirit    { background-color: #2980b9; }
+  .Planning  { background-color: #34495e; }
+
+  .xp-summary, .weekly-bonus, .notes-section, .gaming-unlock {
+    background-color: var(--card-bg);
+    border-radius: 10px;
+    color: var(--text-color);
+  }
+
+  #rewards-list {
+    list-style: none;
+    padding-left: 0;
+  }
+
+  #rewards-list li {
+    margin-bottom: 8px;
+    padding: 5px;
+    background: rgba(255, 255, 255, 0.05);
+    border-left: 3px solid var(--accent-gold);
+    font-size: 14px;
+  }
+
   button {
+    display: block;
     width: 100%;
+    margin-top: 15px;
+    padding: 10px 20px;
+    font-size: 1em;
+    background: var(--accent-blue);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    text-transform: uppercase;
   }
-}
 
+  button:hover {
+    background-color: var(--accent-purple);
+    transition: background-color 0.3s ease;
+  }
+
+  .progress-bar {
+    height: 16px;
+    background-color: #2c2c2c;
+    border-radius: 10px;
+    overflow: hidden;
+    margin: 10px 0;
+  }
+
+  .progress-bar-inner {
+    height: 100%;
+    background-color: var(--accent-gold);
+    width: 0;
+    transition: width 0.4s ease-in-out;
+    box-shadow: var(--success-glow);
+  }
+
+  textarea {
+    width: 100%;
+    padding: 10px;
+    border-radius: 6px;
+    border: none;
+    background: #2a2a2a;
+    color: white;
+    font-size: 14px;
+    resize: vertical;
+  }
+
+  input[type="checkbox"] {
+    transform: scale(1.2);
+    cursor: pointer;
+    accent-color: var(--accent-gold);
+  }
+
+  @media (max-width: 480px) {
     body {
-      font-family: Arial, sans-serif;
-      background: #f0f3f7;
-      margin: 20px;
-      color: #333;
-    }
-    h1, h2, h3 {
-      text-align: center;
-      color: #2c3e50;
-    }
-    table {
-      width: 100%;
-      max-width: 700px;
-      margin: 20px auto;
-      border-collapse: collapse;
-      background: #fff;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
-    }
-    th, td {
-      padding: 12px 15px;
-      border-bottom: 1px solid #ddd;
-      text-align: left;
-    }
-    th {
-      background-color: #2980b9;
-      color: white;
-    }
-    .tag {
-      font-weight: bold;
-      padding: 3px 8px;
-      border-radius: 12px;
-      color: white;
-      font-size: 0.85em;
-    }
-    .Health { background-color: #27ae60; }
-    .Trading { background-color: #c0392b; }
-    .Mindset { background-color: #8e44ad; }
-    .Growth { background-color: #f39c12; }
-    .Career { background-color: #16a085; }
-    .Finance { background-color: #d35400; }
-    .Spirit { background-color: #2980b9; }
-    .Planning { background-color: #34495e; }
-
-    .container {
-      max-width: 700px;
-      margin: 0 auto 40px auto;
-    }
-
-    .weekly-bonus, .notes-section, .xp-summary, .gaming-unlock {
-      background: #ecf0f1;
-      padding: 15px 25px;
-      border-radius: 8px;
-      margin: 30px auto;
-      max-width: 700px;
-    }
-    .weekly-bonus div,
-    .notes-section div {
-      margin-bottom: 10px;
-    }
-
-    .xp-summary {
-      background: #dff0d8;
-      color: #3c763d;
-      box-shadow: 0 0 10px rgba(60, 118, 61, 0.2);
-    }
-
-    #rewards-list {
-      list-style: none;
-      padding-left: 0;
-    }
-
-    #rewards-list li {
-      margin-bottom: 8px;
-    }
-
-    .streak-info {
-      font-weight: bold;
-      color: #e67e22;
-      text-align: center;
-    }
-
-    .gaming-unlock span {
-      font-weight: bold;
-    }
-
-    button {
-      margin: 0 auto;
-      display: block;
-      padding: 10px 20px;
-      font-size: 1em;
-      background: #2980b9;
-      color: white;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-    }
-
-    button:hover {
-      background: #216494;
-    }
-
-    textarea {
-      width: 100%;
-      height: 80px;
       padding: 10px;
-      font-size: 1em;
-      border: 1px solid #ccc;
-      border-radius: 5px;
-      resize: vertical;
+      font-size: 14px;
     }
+    table th, table td {
+      padding: 8px;
+      font-size: 12px;
+    }
+    button {
+      padding: 12px;
+      font-size: 14px;
+    }
+  }
+</style>
 
-    .level-header {
-      text-align: center;
-      margin-top: 20px;
-    }
-
-    .progress-bar {
-      height: 18px;
-      width: 100%;
-      background-color: #ccc;
-      border-radius: 10px;
-      overflow: hidden;
-      margin: 10px auto;
-      max-width: 500px;
-    }
-
-    .progress-bar-inner {
-      height: 100%;
-      background-color: #27ae60;
-      width: 0;
-      transition: width 0.3s ease;
-    }
-  </style>
-</head>
 <body>
   <h1>Blueprint Season - Habit Builder</h1>
   <div class="container">
@@ -174,7 +189,7 @@
     </table>
   </div>
   <!-- Weekly Bonus Quests -->
-  <div class="weekly-bonus">
+ <div class="card weekly-bonus">...</div>
     <h2>Weekly Bonus Quests</h2>
     <div>
       <input type="checkbox" class="weekly-bonus-quest" data-xp="50" id="bonus-5R" />
@@ -219,7 +234,7 @@
   <button id="daily-reset">🔁 Daily Reset</button>
 
   <!-- Level + Total XP Summary -->
-  <div class="xp-summary">
+  <div class="card xp-summary">...</div>
     <div class="level-header">
       <h2>Level: <span id="current-level">1</span> — <span id="level-title">Initiate</span></h2>
       <div class="progress-bar"><div class="progress-bar-inner" id="level-progress-bar"></div></div>
