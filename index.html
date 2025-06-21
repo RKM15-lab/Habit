@@ -1,334 +1,537 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Blueprint Habit Tracker</title>
-  <style>
-    body {
-      margin: 0;
-      background: #121212;
-      color: #eee;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    }
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Habit Builder - Blueprint Season</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background: #121217;
+    margin: 20px;
+    color: #eee;
+  }
+  h1, h2, h3 {
+    text-align: center;
+    color: #8e44ad;
+    text-shadow: 0 0 8px #8e44ad;
+  }
+  table {
+    width: 100%;
+    max-width: 700px;
+    margin: 20px auto;
+    border-collapse: collapse;
+    background: #1e1e2f;
+    box-shadow: 0 0 10px rgba(142, 68, 173, 0.6);
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  th, td {
+    padding: 12px 15px;
+    border-bottom: 1px solid #444;
+    text-align: left;
+  }
+  th {
+    background-color: #8e44ad;
+    color: white;
+  }
+  .tag {
+    font-weight: bold;
+    padding: 3px 8px;
+    border-radius: 12px;
+    color: white;
+    font-size: 0.85em;
+    box-shadow: 0 0 4px rgba(255 255 255 / 0.3);
+  }
+  .Health { background-color: #27ae60; }
+  .Trading { background-color: #c0392b; }
+  .Mindset { background-color: #8e44ad; }
+  .Growth { background-color: #f39c12; }
+  .Career { background-color: #16a085; }
+  .Finance { background-color: #d35400; }
+  .Spirit { background-color: #2980b9; }
+  .Planning { background-color: #34495e; }
 
-    h1, h2, h3 {
-      text-align: center;
-      color: #f1c40f;
-    }
+  .container {
+    max-width: 700px;
+    margin: 0 auto 40px auto;
+  }
 
-    .tab-button {
-      background: #2c3e50;
-      color: #fff;
-      border: none;
-      padding: 12px 18px;
-      font-weight: bold;
-      cursor: pointer;
-      transition: background 0.3s;
-    }
+  .weekly-bonus {
+    background: #1e1e2f;
+    padding: 15px 25px;
+    border-radius: 8px;
+    margin: 30px auto;
+    max-width: 700px;
+    box-shadow: 0 0 8px #2980b9;
+  }
+  .weekly-bonus div {
+    margin-bottom: 10px;
+  }
 
-    .tab-button.active, .tab-button:hover {
-      background: #8e44ad;
-    }
+  .xp-summary {
+    max-width: 700px;
+    margin: 20px auto;
+    background: #232332;
+    border-radius: 8px;
+    padding: 15px 25px;
+    color: #f1c40f;
+    box-shadow: 0 0 10px #f1c40f;
+  }
 
-    .tab-bar {
-      text-align: center;
-      background: #1e1e2f;
-      padding: 10px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.4);
-    }
+  #rewards-list {
+    list-style: none;
+    padding-left: 0;
+  }
+  #rewards-list li {
+    margin-bottom: 8px;
+  }
 
-    .tab-section {
-      display: none;
-      padding: 20px;
-    }
+  /* Tabs style */
+  .tabs {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+  }
+  .tab-button {
+    background: #232332;
+    color: #aaa;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    font-weight: bold;
+    border-radius: 8px 8px 0 0;
+    margin: 0 5px;
+    transition: background 0.3s, color 0.3s;
+    box-shadow: 0 0 8px transparent;
+  }
+  .tab-button.active, .tab-button:hover {
+    background: #8e44ad;
+    color: #fff;
+    box-shadow: 0 0 15px #8e44ad;
+  }
+  .tab-section {
+    background: #1e1e2f;
+    max-width: 700px;
+    margin: 0 auto 40px auto;
+    padding: 20px;
+    border-radius: 0 8px 8px 8px;
+    box-shadow: 0 0 10px #8e44ad;
+    display: none;
+    color: #ddd;
+  }
+  .tab-section.active {
+    display: block;
+  }
 
-    .tab-section.active {
-      display: block;
-    }
+  /* Progress bar styles */
+  .progress-bar {
+    width: 100%;
+    background-color: #444466;
+    border-radius: 20px;
+    overflow: hidden;
+    height: 20px;
+  }
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #2980b9, #8e44ad);
+    width: 0%;
+    transition: width 0.6s ease;
+    box-shadow: 0 0 12px #8e44ad;
+  }
 
-    .card {
-      background: #1e1e2f;
-      border-radius: 16px;
-      padding: 20px;
-      margin: 20px auto;
-      max-width: 800px;
-      box-shadow: 0 0 10px rgba(255,255,255,0.05);
-    }
+  /* Dashboard grid */
+  .dashboard-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px 20px;
+    font-size: 1.1em;
+  }
 
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      color: #eee;
-    }
-
-    th, td {
-      padding: 12px;
-      border-bottom: 1px solid #333;
-    }
-
-    th {
-      background: #34495e;
-    }
-
-    .tag {
-      padding: 5px 10px;
-      border-radius: 12px;
-      font-size: 0.8em;
-      color: #fff;
-    }
-
-    .Health { background: #27ae60; }
-    .Trading { background: #c0392b; }
-    .Mindset { background: #8e44ad; }
-    .Growth { background: #f39c12; }
-    .Career { background: #16a085; }
-    .Finance { background: #d35400; }
-    .Spirit { background: #2980b9; }
-    .Planning { background: #34495e; }
-
-    .progress-bar {
-      background: #555;
-      border-radius: 12px;
-      overflow: hidden;
-      margin-top: 10px;
-    }
-
-    .progress-fill {
-      height: 16px;
-      background: linear-gradient(90deg, #8e44ad, #f1c40f);
-      width: 0%;
-      transition: width 0.5s ease-in-out;
-    }
-
-    .dashboard-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 16px;
-      margin-top: 20px;
-    }
-
-    .shop-items {
-      display: grid;
-      gap: 16px;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      margin-top: 20px;
-    }
-
-    .shop-item {
-      background: #1e1e2f;
-      border-radius: 12px;
-      padding: 20px;
-      box-shadow: 0 0 12px rgba(255,255,255,0.05);
-      transition: transform 0.3s, box-shadow 0.3s;
-    }
-
-    .shop-item:hover {
-      transform: scale(1.02);
-      box-shadow: 0 0 15px rgba(255,255,255,0.1);
-    }
-
-    .shop-item button {
-      background: #8e44ad;
-      color: #fff;
-      border: none;
-      padding: 10px 16px;
-      border-radius: 8px;
-      cursor: pointer;
-      transition: background 0.3s ease;
-      font-weight: bold;
-    }
-
-    .shop-item button:hover {
-      background: #a569bd;
-    }
-  </style>
+  /* Buttons */
+  button.buy-reward {
+    background: #8e44ad;
+    border: none;
+    color: white;
+    padding: 8px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+    box-shadow: 0 0 8px #8e44ad;
+  }
+  button.buy-reward:hover {
+    background: #a366db;
+  }
+</style>
 </head>
 <body>
 
-  <div class="tab-bar">
-    <button class="tab-button active" data-tab="dashboard">Dashboard</button>
-    <button class="tab-button" data-tab="quests">Daily Quests</button>
-    <button class="tab-button" data-tab="shop">Shop</button>
-  </div>
+<h1>Blueprint Season - Habit Builder</h1>
 
-  <div class="tab-section active" id="dashboard">
-    <div class="card">
-      <h2>Level <span id="level-number">1</span>: <span id="level-title">Novice</span></h2>
-      <div class="progress-bar">
-        <div id="xp-bar-fill" class="progress-fill"></div>
-      </div>
-      <p id="xp-text">0 / 100 XP</p>
-      <div class="dashboard-grid">
-  <div><strong>Streak:</strong> <span id="streak-count">0</span></div>
-  <div><strong>Currency:</strong> <span id="currency-count">0 XP</span></div>
-  <div id="game-time-unlock" style="color:#f1c40f; font-weight:bold; margin-top:10px;">
-    🎮 Game Time unlocked for today! Enjoy your unwind session!
+<div class="tabs">
+  <button class="tab-button active" data-tab="daily">Daily Quests</button>
+  <button class="tab-button" data-tab="weekly">Weekly Bonuses</button>
+  <button class="tab-button" data-tab="dashboard">Dashboard</button>
+  <button class="tab-button" data-tab="shop">Shop</button>
+</div>
+
+<!-- Daily Quests Tab -->
+<div class="tab-section active" id="daily">
+  <div class="card container">
+    <table>
+      <thead>
+        <tr><th>Done?</th><th>Quest</th><th>XP</th><th>Tag</th></tr>
+      </thead>
+      <tbody id="daily-quests-tbody">
+        <!-- Daily quests inserted by JS -->
+      </tbody>
+    </table>
   </div>
 </div>
+
+<!-- Weekly Bonuses Tab -->
+<div class="tab-section" id="weekly">
+  <div class="weekly-bonus">
+    <h2>Weekly Bonus Quests</h2>
+    <div>
+      <input type="checkbox" class="weekly-bonus-quest" data-xp="50" id="bonus-5R" />
+      <label for="bonus-5R">Hit 5R trading profit goal (50 XP)</label>
+    </div>
+    <div>
+      <input type="checkbox" class="weekly-bonus-quest" data-xp="40" id="bonus-clean-meals" />
+      <label for="bonus-clean-meals">Full week of clean meals (40 XP)</label>
+    </div>
+    <div>
+      <input type="checkbox" class="weekly-bonus-quest" data-xp="35" id="bonus-morning-walk" />
+      <label for="bonus-morning-walk">Daily morning walk for 7 days (35 XP)</label>
+    </div>
+    <div>
+      <input type="checkbox" class="weekly-bonus-quest" data-xp="45" id="bonus-python-study" />
+      <label for="bonus-python-study">Study Python/backend 3+ hours total (45 XP)</label>
+    </div>
+    <div>
+      <input type="checkbox" class="weekly-bonus-quest" data-xp="30" id="bonus-trade-journal" />
+      <label for="bonus-trade-journal">Complete full trading journal daily (30 XP)</label>
+    </div>
+    <div>
+      <input type="checkbox" class="weekly-bonus-quest" data-xp="20" id="bonus-connect" />
+      <label for="bonus-connect">Connect with friends/family 5x this week (20 XP)</label>
     </div>
   </div>
+</div>
 
-  <div class="tab-section" id="quests">
-    <div class="card">
-      <h2>Daily Quests</h2>
-      <table>
-        <thead>
-          <tr><th>Done?</th><th>Quest</th><th>XP</th><th>Tag</th></tr>
-        </thead>
-        <tbody id="daily-quests-tbody"></tbody>
-      </table>
-    </div>
-  </div>
-
-  <div class="tab-section" id="shop">
-    <div class="card">
-      <h2>XP Shop</h2>
-      <div class="shop-items">
-        <div class="shop-item" data-cost="30">
-          <h3>🍫 Treat Yourself</h3>
-          <p>Cost: 30 XP</p>
-          <button class="buy-reward">Redeem</button>
+<!-- Dashboard Tab -->
+<div class="tab-section" id="dashboard">
+  <div class="xp-summary">
+    <h2>Dashboard</h2>
+    <div class="dashboard-grid">
+      <div><strong>Streak:</strong> <span id="streak-count">0</span></div>
+      <div><strong>Currency:</strong> <span id="currency-count">0 XP</span></div>
+      <div id="game-time-container" style="margin-top: 10px; grid-column: span 2;">
+        <strong>🎮 Game Time Progress</strong>
+        <div class="progress-bar" style="margin-top: 6px;">
+          <div id="game-time-bar-fill" class="progress-fill" style="width: 0%;"></div>
         </div>
-        <div class="shop-item" data-cost="80">
-          <h3>🍽️ Eat Out</h3>
-          <p>Cost: 80 XP</p>
-          <button class="buy-reward">Redeem</button>
-        </div>
-        <div class="shop-item" data-cost="200">
-          <h3>👟 New Trainers</h3>
-          <p>Cost: 200 XP</p>
-          <button class="buy-reward">Redeem</button>
-        </div>
-        <div class="shop-item" data-cost="400">
-          <h3>✈️ Solo Weekend Trip</h3>
-          <p>Cost: 400 XP</p>
-          <button class="buy-reward">Redeem</button>
-        </div>
+        <p id="game-time-text" style="margin: 4px 0 0; color: #f1c40f; font-weight: bold; display:none;">
+          🎉 Game Time unlocked for today! Enjoy your unwind session!
+        </p>
       </div>
+      <h3>Unlocked Rewards:</h3>
+      <ul id="rewards-list"></ul>
     </div>
   </div>
+</div>
+
+<!-- Shop Tab -->
+<div class="tab-section" id="shop">
+  <h2>Shop - Spend Your XP</h2>
+  <div class="shop-items" style="max-width: 700px; margin: 0 auto;">
+    <div class="shop-item" data-cost="30" style="margin-bottom: 12px; background:#232332; padding:12px; border-radius:8px; box-shadow:0 0 10px #8e44ad;">
+      <h3>🍫 Treat Yourself</h3>
+      <p>Cost: 30 XP</p>
+      <button class="buy-reward">Redeem</button>
+    </div>
+    <div class="shop-item" data-cost="40" style="margin-bottom: 12px; background:#232332; padding:12px; border-radius:8px; box-shadow:0 0 10px #8e44ad;">
+      <h3>🛁 Self-Care Bath</h3>
+      <p>Cost: 40 XP</p>
+      <button class="buy-reward">Redeem</button>
+    </div>
+    <div class="shop-item" data-cost="70" style="margin-bottom: 12px; background:#232332; padding:12px; border-radius:8px; box-shadow:0 0 10px #8e44ad;">
+      <h3>🍽️ Eat Out</h3>
+      <p>Cost: 70 XP</p>
+      <button class="buy-reward">Redeem</button>
+    </div>
+    <div class="shop-item" data-cost="100" style="margin-bottom: 12px; background:#232332; padding:12px; border-radius:8px; box-shadow:0 0 10px #8e44ad;">
+      <h3>🛍️ Small Purchase</h3>
+      <p>Cost: 100 XP</p>
+      <button class="buy-reward">Redeem</button>
+    </div>
+    <div class="shop-item" data-cost="200" style="margin-bottom: 12px; background:#232332; padding:12px; border-radius:8px; box-shadow:0 0 10px #8e44ad;">
+      <h3>👟 New Trainers</h3>
+      <p>Cost: 200 XP</p>
+      <button class="buy-reward">Redeem</button>
+    </div>
+    <div class="shop-item" data-cost="400" style="margin-bottom: 12px; background:#232332; padding:12px; border-radius:8px; box-shadow:0 0 10px #8e44ad;">
+      <h3>✈️ Weekend Solo Trip</h3>
+      <p>Cost: 400 XP</p>
+      <button class="buy-reward">Redeem</button>
+    </div>
+  </div>
+</div>
 
 <script>
+  // Define daily quests
   const dailyQuests = [
     { quest: "Morning walk (min 20 mins)", xp: 5, tag: "Health" },
-    { quest: "Pre-trading self-check", xp: 7, tag: "Trading" },
-    { quest: "Take a live trade", xp: 10, tag: "Trading" },
-    { quest: "Log trade + emotion", xp: 5, tag: "Trading" },
-    { quest: "Backtesting or refine strategy", xp: 6, tag: "Trading" },
-    { quest: "Meditation or emotional reflection", xp: 4, tag: "Mindset" },
+    { quest: "Pre-trading self-check (focus, sleep, stress)", xp: 7, tag: "Trading" },
+    { quest: "Take a live trade (based on plan)", xp: 10, tag: "Trading" },
+    { quest: "Log trade + emotion in journal", xp: 5, tag: "Trading" },
+    { quest: "Do backtesting or refine strategy", xp: 6, tag: "Trading" },
+    { quest: "Emotional reflection or meditation", xp: 4, tag: "Mindset" },
     { quest: "Eat 3 clean meals", xp: 5, tag: "Health" },
-    { quest: "1hr strategy playbook work", xp: 7, tag: "Growth" },
-    { quest: "Study 30+ mins of Python", xp: 5, tag: "Career" },
+    { quest: "Spend 1hr improving strategy playbook", xp: 7, tag: "Growth" },
+    { quest: "Study 30+ mins of Python/backend", xp: 5, tag: "Career" },
     { quest: "Update your Money Map", xp: 4, tag: "Finance" },
-    { quest: "Connect with friend/family", xp: 3, tag: "Spirit" },
-    { quest: "Read 10+ mins", xp: 3, tag: "Growth" },
-    { quest: "Plan your next day", xp: 4, tag: "Planning" },
+    { quest: "Connect with a friend or family member", xp: 3, tag: "Spirit" },
+    { quest: "Read 10+ mins (book or trading)", xp: 3, tag: "Growth" },
+    { quest: "Plan your next day (tasks, focus)", xp: 4, tag: "Planning" },
   ];
 
-  const levelTitles = ["Novice", "Apprentice", "Adept", "Expert", "Master", "Grandmaster", "Legendary"];
+  // Rewards for XP milestones
+  const rewards = [
+    { name: "🍫 Treat Yourself", xpRequired: 30 },
+    { name: "🚶 Extra Walk", xpRequired: 40 },
+    { name: "🎮 Game Time", xpRequired: 50 },
+    { name: "🛁 Self-Care Bath", xpRequired: 60 },
+    { name: "🍽️ Eat Out", xpRequired: 80 },
+    { name: "🛍️ Small Purchase", xpRequired: 70 },
+    { name: "👟 New Trainers", xpRequired: 200 },
+    { name: "✈️ Weekend Solo Trip", xpRequired: 400 },
+  ];
+
+  // Shop items (sync with rewards, but no Game Time here)
+  // Using the shop div as above
+
+  const dailyQuestsTbody = document.getElementById('daily-quests-tbody');
+  const totalXpElem = document.getElementById('currency-count');
+  const rewardsListElem = document.getElementById('rewards-list');
+  const streakCountElem = document.getElementById('streak-count');
+
+  // For Game Time progress
+  const GAME_TIME_TARGET = 25; // XP needed to unlock Game Time daily
+
+  // Load saved data or init
   let savedData = JSON.parse(localStorage.getItem('habitBuilderData')) || {
     daily: Array(dailyQuests.length).fill(false),
-    spentXp: 0,
-    lastReset: null,
-    streak: 0
+    weekly: {},
+    streak: 0,
+    currency: 0,
+    shopPurchased: {},
+    lastReset: null
   };
 
-  function resetDailyIfNeeded() {
-    const todayStr = new Date().toISOString().split('T')[0];
+  // Reset daily progress if date changed
+  function checkDailyReset() {
+    const todayStr = new Date().toISOString().slice(0,10);
     if (savedData.lastReset !== todayStr) {
-      if (savedData.daily.every(x => x)) savedData.streak++;
-      else savedData.streak = 0;
       savedData.daily = Array(dailyQuests.length).fill(false);
+      savedData.weekly = {}; // Optional: keep weekly or reset
+      savedData.streak = savedData.streak && savedData.daily.every(done => done) ? savedData.streak + 1 : 0;
+      savedData.currency = savedData.currency || 0; // don't reset currency
+      savedData.shopPurchased = savedData.shopPurchased || {};
       savedData.lastReset = todayStr;
-      localStorage.setItem('habitBuilderData', JSON.stringify(savedData));
+      saveAndUpdate();
     }
   }
 
+  // Render daily quests table
   function renderDailyQuests() {
-    const tbody = document.getElementById('daily-quests-tbody');
-    tbody.innerHTML = '';
+    dailyQuestsTbody.innerHTML = '';
     dailyQuests.forEach((q, i) => {
-      const row = document.createElement('tr');
-      const tdCheck = document.createElement('td');
-      const cb = document.createElement('input');
-      cb.type = 'checkbox';
-      cb.checked = savedData.daily[i];
-      cb.addEventListener('change', () => {
-        savedData.daily[i] = cb.checked;
-        saveAndUpdate();
-      });
-      tdCheck.appendChild(cb);
+      const tr = document.createElement('tr');
 
-      const tdQuest = document.createElement('td'); tdQuest.textContent = q.quest;
-      const tdXp = document.createElement('td'); tdXp.textContent = q.xp + ' XP';
+      const tdCheckbox = document.createElement('td');
+      const checkbox = document.createElement('input');
+      checkbox.type = 'checkbox';
+      checkbox.classList.add('daily-quest');
+      checkbox.dataset.index = i;
+      checkbox.checked = savedData.daily[i];
+      tdCheckbox.appendChild(checkbox);
+
+      const tdQuest = document.createElement('td');
+      tdQuest.textContent = q.quest;
+
+      const tdXp = document.createElement('td');
+      tdXp.textContent = q.xp + ' XP';
+
       const tdTag = document.createElement('td');
-      const tag = document.createElement('span');
-      tag.textContent = q.tag;
-      tag.className = `tag ${q.tag}`;
-      tdTag.appendChild(tag);
+      const spanTag = document.createElement('span');
+      spanTag.classList.add('tag', q.tag);
+      spanTag.textContent = q.tag;
+      tdTag.appendChild(spanTag);
 
-      row.append(tdCheck, tdQuest, tdXp, tdTag);
-      tbody.appendChild(row);
+      tr.appendChild(tdCheckbox);
+      tr.appendChild(tdQuest);
+      tr.appendChild(tdXp);
+      tr.appendChild(tdTag);
+
+      dailyQuestsTbody.appendChild(tr);
     });
   }
 
-  function getTotalXp() {
+  // Load weekly bonuses state
+  function loadWeeklyBonuses() {
+    const weeklyCheckboxes = document.querySelectorAll('.weekly-bonus-quest');
+    weeklyCheckboxes.forEach(cb => {
+      cb.checked = savedData.weekly[cb.id] || false;
+    });
+  }
+
+  // Calculate total XP earned today (daily + weekly)
+  function calculateTotalXp() {
     let total = 0;
     savedData.daily.forEach((done, i) => {
       if (done) total += dailyQuests[i].xp;
     });
-    total -= savedData.spentXp || 0;
+    const weeklyCheckboxes = document.querySelectorAll('.weekly-bonus-quest');
+    weeklyCheckboxes.forEach(cb => {
+      if (cb.checked) total += parseInt(cb.dataset.xp, 10);
+    });
     return total;
   }
 
+  // Update Dashboard values
   function updateDashboard() {
-    const xp = getTotalXp();
-    const level = Math.floor(xp / 100) + 1;
-    const xpThisLevel = xp % 100;
+    const totalXp = calculateTotalXp();
+    totalXpElem.textContent = totalXp + " XP";
+    streakCountElem.textContent = savedData.streak || 0;
 
-    document.getElementById('level-number').textContent = level;
-    document.getElementById('level-title').textContent = levelTitles[Math.min(level - 1, levelTitles.length - 1)];
-    document.getElementById('xp-bar-fill').style.width = `${(xpThisLevel)}%`;
-    document.getElementById('xp-text').textContent = `${xpThisLevel} / 100 XP`;
-    document.getElementById('streak-count').textContent = savedData.streak || 0;
-    document.getElementById('currency-count').textContent = xp + ' XP';
+    // Update unlocked rewards list
+    rewardsListElem.innerHTML = '';
+    rewards
+      .filter(r => totalXp >= r.xpRequired)
+      .forEach(r => {
+        const li = document.createElement('li');
+        li.textContent = `${r.name} — unlocked at ${r.xpRequired} XP`;
+        rewardsListElem.appendChild(li);
+      });
   }
 
+  // Save progress to localStorage
+  function saveProgress() {
+    // daily
+    const dailyCheckboxes = document.querySelectorAll('.daily-quest');
+    dailyCheckboxes.forEach(cb => {
+      const idx = parseInt(cb.dataset.index, 10);
+      savedData.daily[idx] = cb.checked;
+    });
+
+    // weekly
+    const weeklyCheckboxes = document.querySelectorAll('.weekly-bonus-quest');
+    weeklyCheckboxes.forEach(cb => {
+      savedData.weekly[cb.id] = cb.checked;
+    });
+  }
+
+  // Save and update all displays
   function saveAndUpdate() {
-    localStorage.setItem('habitBuilderData', JSON.stringify(savedData));
+    saveProgress();
     updateDashboard();
+    updateGameTimeProgress();
+    localStorage.setItem('habitBuilderData', JSON.stringify(savedData));
   }
 
-  function setupShop() {
-    document.querySelectorAll('.buy-reward').forEach(btn => {
+  // Update the Game Time progress bar and message
+  function updateGameTimeProgress() {
+    const gameTimeBar = document.getElementById('game-time-bar-fill');
+    const gameTimeText = document.getElementById('game-time-text');
+
+    // Example: count XP only from Mindset and Spirit tags (customize as you want)
+    let gameTimeXp = 0;
+    savedData.daily.forEach((done, i) => {
+      if (done && (dailyQuests[i].tag === 'Mindset' || dailyQuests[i].tag === 'Spirit')) {
+        gameTimeXp += dailyQuests[i].xp;
+      }
+    });
+
+    // Cap progress at 100%
+    const progressPercent = Math.min((gameTimeXp / GAME_TIME_TARGET) * 100, 100);
+    gameTimeBar.style.width = progressPercent + '%';
+
+    if (gameTimeXp >= GAME_TIME_TARGET) {
+      gameTimeText.style.display = 'block';
+    } else {
+      gameTimeText.style.display = 'none';
+    }
+  }
+
+  // Tab switching logic
+  function setupTabs() {
+    const buttons = document.querySelectorAll('.tab-button');
+    const sections = document.querySelectorAll('.tab-section');
+
+    buttons.forEach(btn => {
       btn.addEventListener('click', () => {
-        const cost = parseInt(btn.closest('.shop-item').dataset.cost, 10);
-        const current = getTotalXp();
-        if (current >= cost) {
-          savedData.spentXp = (savedData.spentXp || 0) + cost;
-          alert('✅ Reward unlocked! Enjoy it!');
-          saveAndUpdate();
-        } else {
-          alert('❌ Not enough XP!');
-        }
+        buttons.forEach(b => b.classList.remove('active'));
+        sections.forEach(sec => sec.classList.remove('active'));
+
+        btn.classList.add('active');
+        const target = btn.dataset.tab;
+        document.getElementById(target).classList.add('active');
       });
     });
   }
 
-  document.querySelectorAll('.tab-button').forEach(btn => {
-    btn.addEventListener('click', () => {
-      document.querySelectorAll('.tab-button').forEach(b => b.classList.remove('active'));
-      document.querySelectorAll('.tab-section').forEach(s => s.classList.remove('active'));
-      btn.classList.add('active');
-      document.getElementById(btn.dataset.tab).classList.add('active');
+  // Shop logic: buying rewards
+  function setupShop() {
+    const shopButtons = document.querySelectorAll('.buy-reward');
+    shopButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const itemDiv = btn.closest('.shop-item');
+        const cost = parseInt(itemDiv.dataset.cost, 10);
+        const name = itemDiv.querySelector('h3').textContent;
+
+        const totalXp = calculateTotalXp();
+
+        if (totalXp < cost) {
+          alert('Not enough XP to redeem this reward.');
+          return;
+        }
+
+        if (savedData.shopPurchased[name]) {
+          alert('You already redeemed this reward.');
+          return;
+        }
+
+        // Deduct XP from currency (simulate by saving a spent currency)
+        // Since currency is just total XP today, for demo we do not deduct permanently
+        // You can implement a currency system if you want
+
+        savedData.shopPurchased[name] = true;
+        alert(`Reward redeemed: ${name}! Enjoy!`);
+
+        localStorage.setItem('habitBuilderData', JSON.stringify(savedData));
+        updateDashboard();
+      });
     });
+  }
+
+  // On checkbox change - save and update
+  document.addEventListener('change', e => {
+    if (e.target.matches('.daily-quest') || e.target.matches('.weekly-bonus-quest')) {
+      saveAndUpdate();
+    }
   });
 
-  resetDailyIfNeeded();
+  // Initial setup
+  checkDailyReset();
   renderDailyQuests();
+  loadWeeklyBonuses();
   updateDashboard();
+  updateGameTimeProgress();
+  setupTabs();
   setupShop();
 </script>
+
 </body>
 </html>
